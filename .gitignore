@@ -1,3 +1,5 @@
 Backend/env/
 *sqlite3
 Backend/insight/test.py
+.idea
+*/.idea
