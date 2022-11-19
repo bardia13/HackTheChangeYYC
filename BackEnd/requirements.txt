@@ -1,0 +1,9 @@
+django
+djangorestframework
+youtube_transcript_api
+google-api-core
+google-auth
+google-cloud-language
+google-cloud-speech
+googleapis-common-protos
+grpcio
