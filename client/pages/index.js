@@ -1,6 +1,5 @@
 import {useRouter} from 'next/router'
 import {Alert, Button, Card, InputGroup} from "react-bootstrap";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Form from 'react-bootstrap/Form';
 
 export default function Home() {

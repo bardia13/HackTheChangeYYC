@@ -3,7 +3,27 @@ import YouTube from "react-youtube";
 import {getSummary} from "../call/ml";
 import {SUMMARYV1} from "../call/ml";
 import {useState, useEffect} from 'react'
-import {loadavg} from "os";
+import {Card} from "react-bootstrap";
+
+function secondsToClockFormat(seconds) {
+    if (seconds < 3600)
+        return new Date(seconds * 1000).toISOString().slice(14, 19);
+    else
+        return new Date(seconds * 1000).toISOString().slice(11, 19);
+}
+
+function createHighlightedKeyword(keyword) {
+    return `<span style='color:red'>${keyword.keyword}</span>`
+}
+
+function highlightKeywords(summary) {
+    let text = summary.text
+    summary.keywords.forEach(keyword => {
+        console.log(createHighlightedKeyword(keyword))
+        text = text.replaceAll(keyword.keyword, createHighlightedKeyword(keyword))
+    })
+    return <div dangerouslySetInnerHTML={{__html: text}} />
+}
 
 export default function Home(props) {
     const router = useRouter();
@@ -37,12 +57,36 @@ export default function Home(props) {
             autoplay: 1,
         },
     };
+
+    const cardStyle = {
+        marginTop: "20px"
+    }
+
+    const cardTitleStyle = {
+        marginTop: "15px"
+    }
+
     return (
         <div>
-            <YouTube videoId={videoId} opts={opts} onReady={_onReady}/>
-            <label htmlFor="message"
-                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Summary</label>
-            <ol>{data.summaries.map((s) => (<li>{s.text}</li>))}</ol>
+            <div>
+                <YouTube videoId={videoId} opts={opts} onReady={_onReady}/>
+            </div>
+            <div className='p-8 justify-center h-screen flex'>
+                <div>
+                    <Card bg='dark' text='white'>
+                        <Card.Body>
+                            <Card.Title>Summary</Card.Title>
+                        </Card.Body>
+                    </Card>
+                    {data.summaries.map((s) => (
+                        <Card style={cardStyle}>
+                            <Card.Body>
+                                <Card.Title>{secondsToClockFormat(s.start)} - {secondsToClockFormat(s.end)}</Card.Title>
+                                <Card.Subtitle style={cardTitleStyle} className="mb-2 text-muted">{highlightKeywords(s)}</Card.Subtitle>
+                            </Card.Body>
+                        </Card>
+                    ))}</div>
+            </div>
         </div>
     );
 }
