@@ -6,11 +6,19 @@ from .serializers import VideoSerializer, NoteSerializer, NoteCommentSerializer
 from .models import Keyword, Note, NoteComment
 from .ml import get_google_knowledge_results
 from django.http import Http404
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_cookie
 # Create your views here.
 
 
 class AddVideoAPI(CreateAPIView):
     serializer_class = VideoSerializer
+
+    @method_decorator(vary_on_cookie)
+    @method_decorator(cache_page(60*60))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
     
 
 class KeywordAPIView(APIView):
@@ -20,7 +28,9 @@ class KeywordAPIView(APIView):
             return Keyword.objects.get(pk=pk)
         except Keyword.DoesNotExist:
             raise Http404
-
+    
+    @method_decorator(vary_on_cookie)
+    @method_decorator(cache_page(60*60))
     def get(self, request, pk, format=None):
         keyword = self.get_object(pk)
         result = get_google_knowledge_results(keyword.keyword)
@@ -32,6 +42,11 @@ class NoteAPI(ListAPIView):
     def get_queryset(self):
         vid = self.kwargs["vid"]
         return Note.objects.filter(video_id = vid)
+    
+    @method_decorator(vary_on_cookie)
+    @method_decorator(cache_page(60*60))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
 class NoteCreateAPI(CreateAPIView):
     serializer_class = NoteSerializer

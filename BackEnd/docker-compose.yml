@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:alpine
+    restart: always
+  
+  db:
+    image: postgres:13.0-alpine
+    restart: always
+    hostname: db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=insight
+    
+  web:
+    build: ./insight
+    command: bash -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./insight/:/usr/opt/insight/
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    
+  
+
+volumes:
+  postgres_data:
