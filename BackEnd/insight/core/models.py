@@ -45,4 +45,15 @@ class Summary(models.Model):
 class Keyword(models.Model):
     summary = models.ForeignKey(Summary, on_delete=models.CASCADE, related_name="keywords")
     keyword = models.CharField(max_length=100, null=False, blank=False)
-    
+
+
+class Note(models.Model):
+    video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name="notes")
+    author = models.CharField(max_length=200, null=False, blank=False)
+    text = models.TextField(blank=False, null=False)
+    upvote = models.IntegerField(default=0)
+
+class NoteComment(models.Model):
+    note = models.ForeignKey(Note, on_delete=models.CASCADE, related_name="comments")
+    author = models.CharField(max_length=200, null=False, blank=False)
+    text = models.TextField(blank=False, null=False)
