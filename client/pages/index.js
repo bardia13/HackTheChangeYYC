@@ -28,7 +28,6 @@ export default function Home() {
     const cardStyle = {
         width: '30%'
     }
-    document.title = "App Name";
     return (
         <div className='p-8 justify-center items-center h-screen flex' style={divStyle}>
             <Card className="text-center" style={cardStyle}>
