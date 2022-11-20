@@ -14,3 +14,4 @@ export function getSummary(videoId) {
 	return postData(`${SUMMARYV1}`, {"video_id": videoId});
 };
 
+export const KEYWORDV1 = `${APIV1}/core/keyword`
