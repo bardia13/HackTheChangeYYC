@@ -5,6 +5,7 @@ import {SUMMARYV1} from "../call/ml";
 import {useState, useEffect, useRef} from 'react'
 import {Button, Card, Image, Modal} from "react-bootstrap";
 import reactStringReplace from 'react-string-replace';
+import {getHash} from "next/dist/server/image-optimizer";
 
 function secondsToClockFormat(seconds) {
     if (seconds < 3600)
@@ -146,15 +147,14 @@ export default function Home(props) {
                             <Card.Title>Summary</Card.Title>
                         </Card.Body>
                     </Card>
-                    {data.summaries.map((s) => (
-                        <Card style={cardStyle}
-                              bg={(currentSecond >= s.start && currentSecond < s.end) ? "info" : "light"}>
-                            <Card.Body>
-                                <Card.Title>{secondsToClockFormat(s.start)} - {secondsToClockFormat(s.end)}</Card.Title>
-                                <Card.Subtitle style={cardTitleStyle}
-                                               className="mb-2 text-muted">{spanize(s)}</Card.Subtitle>
-                            </Card.Body>
-                        </Card>
+                    {data.summaries.map((s, idx) => (
+                    <Card key={idx} style={cardStyle} bg={(currentSecond >= s.start && currentSecond < s.end) ? "info" : "light"}>
+                        <Card.Body>
+                            <Card.Title>{secondsToClockFormat(s.start)} - {secondsToClockFormat(s.end)}</Card.Title>
+                            <Card.Subtitle style={cardTitleStyle}
+                                           className="mb-2 text-muted">{spanize(s)}</Card.Subtitle>
+                        </Card.Body>
+                    </Card>
                     ))}</div>
             </div>
             <Modal show={show} onHide={handleClose}>
