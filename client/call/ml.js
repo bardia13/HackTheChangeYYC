@@ -1,4 +1,4 @@
-const APIV1 = "http://34.211.58.93:8000"
+const APIV1 = "http://web:8000"
 export const SUMMARYV1 = `${APIV1}/core/video/add/`
 function postData(url = '', data = {}) {
    return fetch(url, {
