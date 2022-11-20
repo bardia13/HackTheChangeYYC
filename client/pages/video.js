@@ -110,12 +110,10 @@ export default function Home(props) {
         return (<div>{res}</div>)
     }
 
-    const fetchNotes = () => {
-        fetch(GET_NOTES(data.id))
+    const fetchNotes = (dataId = null) => {
+        fetch(GET_NOTES(dataId ? dataId : data.id))
                     .then((res) => res.json())
-                    .then((data) => {
-                        setNotes(data)
-                    })
+                    .then((res) => {setNotes(res)})
     }
 
     useEffect(() => {
@@ -146,7 +144,7 @@ export default function Home(props) {
                 setData(data)
                 setLoading(false)
 
-                fetchNotes()
+                fetchNotes(data.id)
             })
         return () => {
             clearInterval(timeId)
@@ -192,9 +190,11 @@ export default function Home(props) {
             },
             body: JSON.stringify({"video": data.id, "text": noteText, "author": getAuthor()})
         }
-        setLoading(true)
         fetch(`${CREATE_NOTE}`, postData)
-            .then((res) => {fetchNotes()})
+            .then((res) => {
+                fetchNotes()
+                event.target[0].value = ""
+            })
     }
 
     return (
