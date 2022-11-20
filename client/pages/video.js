@@ -29,7 +29,7 @@ export default function Home(props) {
     }, [videoId])
 
     if (isLoading) return <p>Loading...</p>
-    if (!data || !data.summary) return <p>No profile data</p>
+    if (!data || !data.summaries) return <p>No profile data</p>
     const opts = {
         height: "500",
         width: "100%",
@@ -42,7 +42,7 @@ export default function Home(props) {
             <YouTube videoId={videoId} opts={opts} onReady={_onReady}/>
             <label htmlFor="message"
                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Summary</label>
-            <ol>{data.summary.map((s) => (<li>{s.text}</li>))}</ol>
+            <ol>{data.summaries.map((s) => (<li>{s.text}</li>))}</ol>
         </div>
     );
 }
