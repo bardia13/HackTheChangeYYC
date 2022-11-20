@@ -28,6 +28,14 @@ def break_transcripts_into_section(transcripts):
             end_time = 0
             text = ""
             counter = 0
+    end_time = transcripts[-1]["start"] + transcripts[-1]["duration"]
+    if counter > 0:
+        result.append({
+            "start": start_time,
+            "end": end_time,
+            "text": text
+        })
+
 
     return result
 
