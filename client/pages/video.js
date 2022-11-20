@@ -19,7 +19,6 @@ function createHighlightedKeyword(keyword) {
 function highlightKeywords(summary) {
     let text = summary.text
     summary.keywords.forEach(keyword => {
-        console.log(createHighlightedKeyword(keyword))
         text = text.replaceAll(keyword.keyword, createHighlightedKeyword(keyword))
     })
     return <div dangerouslySetInnerHTML={{__html: text}} />
@@ -31,15 +30,18 @@ export default function Home(props) {
     const [data, setData] = useState(null)
     const [isLoading, setLoading] = useState(false)
     const [isPlayerSetSet, setPlayerSet] = useState(false)
+    const [currentSecond, setCurrentSecond] = useState(0)
     const ytRef = useRef(null)
     useEffect(() => {
         let timeId = 0
         if (!videoId) return
         if (isPlayerSetSet)
             timeId = setInterval(() => {
-                ytRef.current.getInternalPlayer().getCurrentTime().then((r) => {
-                    console.log(r)
-                })
+                if (ytRef.current != undefined) {
+                    ytRef.current.getInternalPlayer().getCurrentTime().then((r) => {
+                        setCurrentSecond(r)
+                    })
+                }
             }, 1000)
         const postData = {
             method: 'POST',
@@ -92,7 +94,7 @@ export default function Home(props) {
                         </Card.Body>
                     </Card>
                     {data.summaries.map((s) => (
-                        <Card style={cardStyle}>
+                        <Card style={cardStyle} bg={(currentSecond >= s.start && currentSecond < s.end) ? "info" : "light"}>
                             <Card.Body>
                                 <Card.Title>{secondsToClockFormat(s.start)} - {secondsToClockFormat(s.end)}</Card.Title>
                                 <Card.Subtitle style={cardTitleStyle} className="mb-2 text-muted">{highlightKeywords(s)}</Card.Subtitle>
