@@ -1,5 +1,8 @@
 from django.db import models
 from .utility import get_yt_video_id
+from .transcript import get_transcript
+from .ml import get_summary_of_text
+import json
 # Create your models here.
 
 class Video(models.Model):
@@ -10,6 +13,16 @@ class Video(models.Model):
     def save(self, *args, **kwargs):
         self.video_id = get_yt_video_id(self.url)
         super(Video, self).save(*args, **kwargs)
+    
+    def get_summary(self):
+        transcripts = json.loads(get_transcript(self.video_id))
+        transcripts_full_text = ""
+        for item in transcripts:
+            transcripts_full_text += item["text"] + " "
+        # print(transcripts_full_text)
+        return get_summary_of_text(transcripts_full_text)
+        
+
 
     
 class Topic(models.Model):

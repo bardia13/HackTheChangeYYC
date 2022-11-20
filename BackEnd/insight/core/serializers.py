@@ -11,4 +11,5 @@ class VideoSerializer(ModelSerializer):
     def to_representation(self, instance):
         dict = super().to_representation(instance)
         dict["transcript"] = json.loads(get_transcript(dict["video_id"]))
+        dict["summary"] = instance.get_summary()
         return dict
