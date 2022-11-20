@@ -30,7 +30,7 @@ class VideoSerializer(ModelSerializer):
     
     def create(self, validated_data):
         try:
-            instance = Video.objects.get(video_id = validated_data["video_id"])
+            instance = Video.objects.filter(video_id = validated_data["video_id"]).first()
             return instance
         except Video.DoesNotExist:
             return super().create(validated_data)
