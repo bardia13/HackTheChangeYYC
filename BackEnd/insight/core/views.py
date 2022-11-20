@@ -42,9 +42,7 @@ class NoteAPI(ListAPIView):
     def get_queryset(self):
         vid = self.kwargs["vid"]
         return Note.objects.filter(video_id = vid)
-    
-    @method_decorator(vary_on_cookie)
-    @method_decorator(cache_page(60*60))
+
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
