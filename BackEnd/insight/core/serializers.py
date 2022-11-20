@@ -29,10 +29,11 @@ class VideoSerializer(ModelSerializer):
         return dict
     
     def create(self, validated_data):
-        try:
-            instance = Video.objects.filter(video_id = validated_data["video_id"]).first()
+        
+        instance = Video.objects.filter(video_id = validated_data["video_id"]).first()
+        if instance:
             return instance
-        except Video.DoesNotExist:
+        else:
             return super().create(validated_data)
 
 
