@@ -30,7 +30,7 @@ export default function Home() {
     return (
         <div className='p-8 justify-center items-center h-screen flex' style={divStyle}>
             <Card className="text-center" style={cardStyle}>
-                <Card.Header>App Name</Card.Header>
+                <Card.Header>Welcome to Gilbert!</Card.Header>
                 <Card.Body>
                     <Card.Title>Please enter the Youtube URL:</Card.Title>
                         <form className='flex' onSubmit={submitContact}>

@@ -74,7 +74,7 @@ export default function Home(props) {
             .then((data) => {
                 setModalContent({
                     title: keyword.keyword,
-                    text: data.detailedDescription.articleBody,
+                    text: data.detailedDescription ? data.detailedDescription.articleBody : data.description,
                     imageUrl: data.image ? data.image.contentUrl : null
                 })
             })
