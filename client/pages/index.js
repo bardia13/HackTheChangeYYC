@@ -3,6 +3,11 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import {useRouter} from 'next/router'
 import {useState} from "react"
+import {Alert, Button, Card, InputGroup} from "react-bootstrap";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import {Input} from "postcss";
+import Form from 'react-bootstrap/Form';
+
 
 export default function Home() {
     const router = useRouter()
@@ -10,20 +15,49 @@ export default function Home() {
     const submitContact = async (event) => {
         event.preventDefault();
         const link = event.target[0].value;
-        const vid_id = link.substring(link.lastIndexOf('=') + 1, link.length)
-        router.push({pathname: '/video', query: {vid: vid_id}});
+        console.log(link)
+        const parts = link.substring(link.lastIndexOf('?') + 1, link.length).split("&")
+        parts.forEach(part => {
+            if (part.startsWith("v=")) {
+                const vid_id = part.substring(part.lastIndexOf('=') + 1, part.length)
+                router.push({pathname: '/video', query: {vid: vid_id}})
+            }
+        })
+    }
+
+    const divStyle = {
+        background: `url("/background.jpeg") no-repeat center center fixed`,
+        backgroundSize: 'cover',
+        height: '100vh',
+        overflow: 'hidden'
+    }
+
+    const cardStyle = {
+        width: '30%'
     }
 
     return (
-        <div className='p-8 justify-center items-center h-screen flex'>
-            <form className='flex' onSubmit={submitContact}>
-                <input className='shadow-inner rounded-l p-2 flex-1' id='video-link' type='text'
-                       placeholder='https://youtube.com/?v=1234' name="link"/>
-                <button className='bg-blue-600 hover:bg-blue-700 duration-300 text-white shadow p-2 rounded-r'
-                        type='submit'>
-                    Play
-                </button>
-            </form>
+        <div className='p-8 justify-center items-center h-screen flex' style={divStyle}>
+            <Card className="text-center" style={cardStyle}>
+                <Card.Header>App Name</Card.Header>
+                <Card.Body>
+                    <Card.Title>Please enter the Youtube URL:</Card.Title>
+                        <form className='flex' onSubmit={submitContact}>
+                            <InputGroup className="mb-3">
+                                <Form.Control
+                                    placeholder="https://youtube.com/?v=1234"
+                                    aria-label="https://youtube.com/?v=1234"
+                                    aria-describedby="basic-addon2"
+                                    type='text'
+                                    id='video-link'
+                                />
+                                <Button variant="primary" id="button-addon2" type='submit'>
+                                    Button
+                                </Button>
+                            </InputGroup>
+                        </form>
+                </Card.Body>
+            </Card>
         </div>
     )
 }
