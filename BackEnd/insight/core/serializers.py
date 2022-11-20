@@ -1,12 +1,19 @@
 from rest_framework.serializers import ModelSerializer
-from .models import Video, Summary
+from .models import Video, Summary, Keyword
 from .transcript import get_transcript
+from .ml import get_text_keywords
 import json
 
+class KeywordSerializer(ModelSerializer):
+    class Meta:
+        model = Keyword
+        fields = ["keyword"]
+
 class SummarySerializer(ModelSerializer):
+    keywords = KeywordSerializer(many=True, read_only=True)
     class Meta: 
         model = Summary
-        fields = ["text", "start", "end"]
+        fields = ["text", "start", "end", "keywords"]
 
 class VideoSerializer(ModelSerializer):
     summaries = SummarySerializer(many=True, read_only=True)

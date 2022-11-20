@@ -1,7 +1,7 @@
 from django.db import models
 from .utility import get_yt_video_id
 from .transcript import get_transcript
-from .ml import get_summary_of_transcript
+from .ml import get_summary_of_transcript, get_text_keywords
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 import json
@@ -21,14 +21,18 @@ def video_post_save(sender, **kwargs):
     if not instance.has_summary:
         summaries = get_summary_of_transcript(transcripts) 
         for summary in summaries:
-            Summary.objects.create(
+            keywords = get_text_keywords(summary["text"])
+            obj = Summary.objects.create(
                 video = instance,
                 text = summary["text"],
                 start = summary["start"],
                 end = summary["end"]
             )
-
-    
+            for keyword in keywords:
+                Keyword.objects.create(
+                    summary = obj,
+                    keyword = keyword
+                )
 
     
 class Summary(models.Model):
@@ -38,4 +42,7 @@ class Summary(models.Model):
     start = models.FloatField(default=0, null=False, blank=False)
     end = models.FloatField(default=0, null=False, blank=False)
 
+class Keyword(models.Model):
+    summary = models.ForeignKey(Summary, on_delete=models.CASCADE, related_name="keywords")
+    keyword = models.CharField(max_length=100, null=False, blank=False)
     
