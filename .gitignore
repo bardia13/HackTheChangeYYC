@@ -4,4 +4,6 @@ Backend/insight/test.py
 .idea
 */.idea
  __pycache__/
+ **/__pycache__/
  *.pyc
+ **/*.pyc
