@@ -22,6 +22,27 @@ export default function Home(props) {
     const [currentSecond, setCurrentSecond] = useState(0)
     const [modalContent, setModalContent] = useState(null)
     const [show, setShow] = useState(false);
+    const [notes, setNotes] = useState([
+        {
+            author: "Bardia Abhari",
+            authorAvatar: "https://img.icons8.com/color/512/person-male.png",
+            creationDate: "November 20, 2022, 04:31",
+            text: "Depends on what you want to do.\n" +
+                "Want to be a web dev? HTML/Javascript/CSS\n" +
+                "Want to learn a simple programming language that will work for many things? Python\n" +
+                "Want to become a game developer? C# or C++\n" +
+                "Want to learn a programming language that will be a little painful to learn but will help you a lot and works in embedded systems, Operating Systems, Drivers, and smart electronics? "
+        },
+        {
+            author: "Morteza Hosseini",
+            authorAvatar: "https://img.icons8.com/color/512/person-female.png",
+            creationDate: "November 20, 2022, 05:27",
+            text: "I work for a huge company, recently started a web dev boot camp in addition to self study, " +
+                "I mainly needed additional structure and guidance. I was on a work call ( i manage the support of 7 different software projects in production)," +
+                " one of the senior devs was talking about assigning various tasks to freshies ie new devs. After the call I pinged him on skype and explained to him" +
+                " that I've been coding for about 2 months and was really interested in learning more and if he had any advice on what I should focus on etc.. , dude this guy proceeded to just destroy me. I actually got nervous on the call because I wasn't prepared for it to turn so confrontational , since i wasn't even asking for a job."
+        }
+    ])
 
     const handleClose = () => {
         setModalContent(null)
@@ -63,7 +84,8 @@ export default function Home(props) {
                 else {
                     part.split(keyword.keyword).forEach(p => {
                         result.push(p)
-                        result.push(<span onClick={() => handleShow(keyword)} style={highlightStyle}>{keyword.keyword}</span>)
+                        result.push(<span onClick={() => handleShow(keyword)}
+                                          style={highlightStyle}>{keyword.keyword}</span>)
                     })
                     result.pop()
                 }
@@ -130,8 +152,10 @@ export default function Home(props) {
         setPlayerSet(true)
     }
 
-    const highlightStyle = {
-        color: 'red'
+    const avatarStyle = {
+        float: 'left',
+        width: '200px',
+        marginRight: '20px'
     }
 
     return (
@@ -139,7 +163,7 @@ export default function Home(props) {
             <div>
                 <YouTube ref={ytRef} id={videoId} videoId={videoId} opts={opts} onReady={_onReady}/>
             </div>
-            <div className='p-8 justify-center h-screen flex'>
+            <div className='p-8 justify-center  flex'>
                 <div>
                     <Card bg='dark' text='white'>
                         <Card.Body>
@@ -157,12 +181,34 @@ export default function Home(props) {
                         </Card>
                     ))}</div>
             </div>
+            <div className='p-8 justify-center  flex'>
+                <div>
+                    <Card bg='dark' text='white'>
+                        <Card.Body>
+                            <Card.Title>Notes</Card.Title>
+                        </Card.Body>
+                    </Card>
+                    {notes.map((note) => (
+                        <Card style={cardStyle} bg="light">
+                            <Card.Body>
+                                <Card.Title>
+                                    <Image thumbnail src={note.authorAvatar} style={avatarStyle} />
+                                    {note.author}
+                                </Card.Title>
+                                <Card.Subtitle className="mb-2 text-muted">{note.creationDate}</Card.Subtitle>
+                                <Card.Text>{note.text}</Card.Text>
+                            </Card.Body>
+                        </Card>
+                    ))}
+                </div>
+            </div>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>{modalContent ? modalContent.title : ""}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    { modalContent && modalContent.imageUrl ? <Image fluid={true} src={modalContent.imageUrl} alt={modalContent.title}/> : ""}
+                    {modalContent && modalContent.imageUrl ?
+                        <Image fluid={true} src={modalContent.imageUrl} alt={modalContent.title}/> : ""}
                     {modalContent ? modalContent.text : 'Loading...'}
                 </Modal.Body>
             </Modal>
