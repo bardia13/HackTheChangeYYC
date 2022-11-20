@@ -17,16 +17,22 @@ services:
       - POSTGRES_DB=insight
     
   web:
-    build: ./insight
+    build: BackEnd/insight
     command: bash -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
     volumes:
-      - ./insight/:/usr/opt/insight/
+      - ./BackEnd/insight/:/usr/opt/insight/
     ports:
       - 8000:8000
     depends_on:
       - db
-    
-  
+
+  client:
+    build: client
+    ports:
+      - 3000:3000
+    depends_on:
+      - web
+
 
 volumes:
   postgres_data:

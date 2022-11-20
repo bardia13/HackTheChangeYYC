@@ -194,8 +194,8 @@ export default function Home(props) {
                             <Card.Title>Notes</Card.Title>
                         </Card.Body>
                     </Card>
-                    {notes.map((note) => (
-                        <Card style={cardStyle} bg="light">
+                    {notes.map((note, idx) => (
+                        <Card key={idx} style={cardStyle} bg="light">
                             <Card.Body>
                                 <Card.Title>
                                     <Image thumbnail src={note.authorAvatar} style={avatarStyle}/>
