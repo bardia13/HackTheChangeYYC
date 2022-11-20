@@ -226,8 +226,8 @@ export default function Home(props) {
                             <Card.Title>Notes</Card.Title>
                         </Card.Body>
                     </Card>
-                    {notes && notes.map((note) => (
-                        <Card style={cardStyle} bg="light">
+                    {notes && notes.map((note, idx) => (
+                        <Card key={idx} style={cardStyle} bg="light">
                             <Card.Body>
                                 <Card.Title>
                                     <Image thumbnail src={getAvatar()} style={avatarStyle}/>
