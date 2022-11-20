@@ -30,7 +30,7 @@ def break_transcripts_into_section(transcripts):
 
 def get_summary_of_transcript(transcripts):        
     API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
-    headers = {"Authorization": "Bearer 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"}
+    headers = {"Authorization": "Bearer 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"}
     
     sections = break_transcripts_into_section(transcripts)
     print(sections)
