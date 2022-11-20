@@ -7,3 +7,4 @@ from .serializers import VideoSerializer
 class AddVideoAPI(CreateAPIView):
     serializer_class = VideoSerializer
     
+    

@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Video, Topic
+from .models import Video, Summary 
 # Register your models here.
 
 admin.site.register(Video)
-admin.site.register(Topic)
+admin.site.register(Summary)
