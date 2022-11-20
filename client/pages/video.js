@@ -2,7 +2,7 @@ import {useRouter} from 'next/router'
 import YouTube from "react-youtube";
 import {getSummary} from "../call/ml";
 import {SUMMARYV1} from "../call/ml";
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useRef} from 'react'
 import {Card} from "react-bootstrap";
 
 function secondsToClockFormat(seconds) {
@@ -30,15 +30,24 @@ export default function Home(props) {
     const videoId = router.query.vid;
     const [data, setData] = useState(null)
     const [isLoading, setLoading] = useState(false)
-    const postData = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({"video_id": videoId})
-    }
+    const [isPlayerSetSet, setPlayerSet] = useState(false)
+    const ytRef = useRef(null)
     useEffect(() => {
+        let timeId = 0
         if (!videoId) return
+        if (isPlayerSetSet)
+            timeId = setInterval(() => {
+                ytRef.current.getInternalPlayer().getCurrentTime().then((r) => {
+                    console.log(r)
+                })
+            }, 1000)
+        const postData = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({"video_id": videoId})
+        }
         setLoading(true)
         fetch(`${SUMMARYV1}`, postData)
             .then((res) => res.json())
@@ -46,10 +55,11 @@ export default function Home(props) {
                 setData(data)
                 setLoading(false)
             })
-    }, [videoId])
+        return () => {clearInterval(timeId)}
+    }, [videoId, isPlayerSetSet])
 
     if (isLoading) return <p>Loading...</p>
-    if (!data || !data.summaries) return <p>No profile data</p>
+    if (!data || !data.summaries) return <p>No data</p>
     const opts = {
         height: "500",
         width: "100%",
@@ -66,10 +76,13 @@ export default function Home(props) {
         marginTop: "15px"
     }
 
+    const _onReady = (event) => {
+        setPlayerSet(true)
+    }
     return (
         <div>
             <div>
-                <YouTube videoId={videoId} opts={opts} onReady={_onReady}/>
+                <YouTube ref={ytRef} id={videoId} videoId={videoId} opts={opts} onReady={_onReady}/>
             </div>
             <div className='p-8 justify-center h-screen flex'>
                 <div>
@@ -89,8 +102,4 @@ export default function Home(props) {
             </div>
         </div>
     );
-}
-
-function _onReady(event) {
-    event.target.pauseVideo();
 }
