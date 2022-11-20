@@ -3,8 +3,8 @@ import YouTube from "react-youtube";
 import {getSummary, KEYWORDV1} from "../call/ml";
 import {SUMMARYV1} from "../call/ml";
 import {useState, useEffect, useRef} from 'react'
-import {Button, Card, Image, Modal} from "react-bootstrap";
-import reactStringReplace from 'react-string-replace';
+import {Button, Card, Image, InputGroup, Modal} from "react-bootstrap";
+import Form from 'react-bootstrap/Form';
 
 function secondsToClockFormat(seconds) {
     if (seconds < 3600)
@@ -26,7 +26,7 @@ export default function Home(props) {
         {
             author: "Bardia Abhari",
             authorAvatar: "https://img.icons8.com/color/512/person-male.png",
-            creationDate: "November 20, 2022, 04:31",
+            creationDate: "November 20, 2022 - 04:31",
             text: "Depends on what you want to do.\n" +
                 "Want to be a web dev? HTML/Javascript/CSS\n" +
                 "Want to learn a simple programming language that will work for many things? Python\n" +
@@ -34,15 +34,16 @@ export default function Home(props) {
                 "Want to learn a programming language that will be a little painful to learn but will help you a lot and works in embedded systems, Operating Systems, Drivers, and smart electronics? "
         },
         {
-            author: "Morteza Hosseini",
+            author: "Sara Jack",
             authorAvatar: "https://img.icons8.com/color/512/person-female.png",
-            creationDate: "November 20, 2022, 05:27",
+            creationDate: "November 20, 2022 - 05:27",
             text: "I work for a huge company, recently started a web dev boot camp in addition to self study, " +
                 "I mainly needed additional structure and guidance. I was on a work call ( i manage the support of 7 different software projects in production)," +
                 " one of the senior devs was talking about assigning various tasks to freshies ie new devs. After the call I pinged him on skype and explained to him" +
                 " that I've been coding for about 2 months and was really interested in learning more and if he had any advice on what I should focus on etc.. , dude this guy proceeded to just destroy me. I actually got nervous on the call because I wasn't prepared for it to turn so confrontational , since i wasn't even asking for a job."
         }
     ])
+    // TODO: fetch list of notes from server
 
     const handleClose = () => {
         setModalContent(null)
@@ -158,6 +159,12 @@ export default function Home(props) {
         marginRight: '20px'
     }
 
+    const submitNote = async (event) => {
+        event.preventDefault();
+        const noteText = event.target[0].value;
+        // TODO: create a note
+    }
+
     return (
         <div>
             <div>
@@ -192,7 +199,7 @@ export default function Home(props) {
                         <Card style={cardStyle} bg="light">
                             <Card.Body>
                                 <Card.Title>
-                                    <Image thumbnail src={note.authorAvatar} style={avatarStyle} />
+                                    <Image thumbnail src={note.authorAvatar} style={avatarStyle}/>
                                     {note.author}
                                 </Card.Title>
                                 <Card.Subtitle className="mb-2 text-muted">{note.creationDate}</Card.Subtitle>
@@ -200,6 +207,21 @@ export default function Home(props) {
                             </Card.Body>
                         </Card>
                     ))}
+                    <Card style={cardStyle} bg="light">
+                        <Card.Body>
+                            <Card.Text>
+                                <form onSubmit={submitNote}>
+                                    <InputGroup>
+                                        <InputGroup.Text>Have an idea?</InputGroup.Text>
+                                        <Form.Control as="textarea" aria-label="With textarea"/>
+                                        <Button variant="outline-secondary" id="button-addon2" type={"submit"}>
+                                            Publish
+                                        </Button>
+                                    </InputGroup>
+                                </form>
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
                 </div>
             </div>
             <Modal show={show} onHide={handleClose}>

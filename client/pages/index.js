@@ -43,7 +43,7 @@ export default function Home() {
                                     id='video-link'
                                 />
                                 <Button variant="dark" id="button-addon2" type='submit'>
-                                    Button
+                                    Play
                                 </Button>
                             </InputGroup>
                         </form>
