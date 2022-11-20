@@ -10,8 +10,9 @@ export default function Home() {
     const submitContact = async (event) => {
         event.preventDefault();
         const link = event.target[0].value;
-        router.push("/video")
-    };
+        const vid_id = link.substring(link.lastIndexOf('=') + 1, link.length)
+        router.push({pathname: '/video', query: {vid: vid_id}});
+    }
 
     return (
         <div className='p-8 justify-center items-center h-screen flex'>
