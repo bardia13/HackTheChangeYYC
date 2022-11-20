@@ -5,7 +5,6 @@ import {SUMMARYV1} from "../call/ml";
 import {useState, useEffect, useRef} from 'react'
 import {Button, Card, Image, InputGroup, Modal} from "react-bootstrap";
 import Form from 'react-bootstrap/Form';
-import {getHash} from "next/dist/server/image-optimizer";
 
 function secondsToClockFormat(seconds) {
     if (seconds < 3600)
