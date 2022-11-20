@@ -36,6 +36,8 @@ export default function Home() {
         width: '30%'
     }
 
+    document.title = "App Name";
+
     return (
         <div className='p-8 justify-center items-center h-screen flex' style={divStyle}>
             <Card className="text-center" style={cardStyle}>
@@ -51,7 +53,7 @@ export default function Home() {
                                     type='text'
                                     id='video-link'
                                 />
-                                <Button variant="primary" id="button-addon2" type='submit'>
+                                <Button variant="dark" id="button-addon2" type='submit'>
                                     Button
                                 </Button>
                             </InputGroup>
