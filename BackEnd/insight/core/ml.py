@@ -1,6 +1,8 @@
 import requests
 from google.cloud import language_v1
-
+import json
+import requests
+from urllib.parse import urlencode
 
 def break_transcripts_into_section(transcripts):
     start_time = 0
@@ -58,3 +60,20 @@ def get_text_keywords(text):
                 (entity.salience > 0.1 and language_v1.Entity.Type.OTHER == entity.type_):
             keywords_array.append(entity.name)
     return list(set(keywords_array))
+
+
+def get_google_knowledge_results(keyword):
+    api_key = "AIzaSyDtXV1y58ZnwDmQaf9QHWLvOEUGq0m1iVk"
+    service_url = 'https://kgsearch.googleapis.com/v1/entities:search'
+    params = {
+        'query': keyword,
+        'limit': 1,
+        'indent': True,
+        'key': api_key,
+    }
+    url = service_url + '?' + urlencode(params)
+    response = requests.get(url).json()
+    try:
+        return response["itemListElement"][0]["result"]
+    except KeyError:
+        return None

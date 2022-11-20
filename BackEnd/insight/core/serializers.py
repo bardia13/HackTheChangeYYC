@@ -7,19 +7,19 @@ import json
 class KeywordSerializer(ModelSerializer):
     class Meta:
         model = Keyword
-        fields = ["keyword"]
+        fields = ["id", "keyword"]
 
 class SummarySerializer(ModelSerializer):
     keywords = KeywordSerializer(many=True, read_only=True)
     class Meta: 
         model = Summary
-        fields = ["text", "start", "end", "keywords"]
+        fields = ["id", "text", "start", "end", "keywords"]
 
 class VideoSerializer(ModelSerializer):
     summaries = SummarySerializer(many=True, read_only=True)
     class Meta:
         model = Video
-        fields = ["video_id", "summaries"]
+        fields = ["id", "video_id", "summaries"]
         read_only_fields = ["summaries"]
 
     def to_representation(self, instance):
