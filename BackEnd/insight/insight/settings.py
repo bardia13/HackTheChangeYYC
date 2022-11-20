@@ -125,4 +125,4 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 import os
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.getcwd() + "/google-credential.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.getcwd() + "/../google-credential.json"
