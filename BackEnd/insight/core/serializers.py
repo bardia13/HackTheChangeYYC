@@ -5,8 +5,7 @@ import json
 class VideoSerializer(ModelSerializer):
     class Meta:
         model = Video
-        fields = ["url", "video_id"]
-        read_only_fields = ["video_id"]
+        fields = ["video_id"]
 
     def to_representation(self, instance):
         dict = super().to_representation(instance)

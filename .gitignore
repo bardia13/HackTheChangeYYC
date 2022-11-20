@@ -4,7 +4,7 @@ Backend/insight/test.py
 .idea
 .vscode
 */.idea
- __pycache__/
- **/__pycache__/
- *.pyc
- **/*.pyc
+__pycache__/
+**/__pycache__/
+*.pyc
+**/*.pyc
