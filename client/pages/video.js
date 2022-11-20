@@ -1,6 +1,6 @@
 import {useRouter} from 'next/router'
 import YouTube from "react-youtube";
-import {getSummary, KEYWORDV1} from "../call/ml";
+import {CREATE_NOTE, GET_NOTES, KEYWORDV1} from "../call/ml";
 import {SUMMARYV1} from "../call/ml";
 import {useState, useEffect, useRef} from 'react'
 import {Button, Card, Image, InputGroup, Modal} from "react-bootstrap";
@@ -25,8 +25,6 @@ export default function Home(props) {
     const [notes, setNotes] = useState([
         {
             author: "Bardia Abhari",
-            authorAvatar: "https://img.icons8.com/color/512/person-male.png",
-            creationDate: "November 20, 2022 - 04:31",
             text: "Depends on what you want to do.\n" +
                 "Want to be a web dev? HTML/Javascript/CSS\n" +
                 "Want to learn a simple programming language that will work for many things? Python\n" +
@@ -35,15 +33,31 @@ export default function Home(props) {
         },
         {
             author: "Sara Jack",
-            authorAvatar: "https://img.icons8.com/color/512/person-female.png",
-            creationDate: "November 20, 2022 - 05:27",
             text: "I work for a huge company, recently started a web dev boot camp in addition to self study, " +
                 "I mainly needed additional structure and guidance. I was on a work call ( i manage the support of 7 different software projects in production)," +
                 " one of the senior devs was talking about assigning various tasks to freshies ie new devs. After the call I pinged him on skype and explained to him" +
                 " that I've been coding for about 2 months and was really interested in learning more and if he had any advice on what I should focus on etc.. , dude this guy proceeded to just destroy me. I actually got nervous on the call because I wasn't prepared for it to turn so confrontational , since i wasn't even asking for a job."
         }
     ])
-    // TODO: fetch list of notes from server
+    const getAvatar = () => {
+        return [
+            "https://img.icons8.com/color/512/person-male.png",
+            "https://img.icons8.com/color/512/person-female.png"
+        ][Math.floor(Math.random() * 2)];
+    }
+    const getAuthor = () => {
+        return [
+            "Bardia Abhari",
+            "Sara Jack"
+        ][Math.floor(Math.random() * 2)];
+    }
+    const getCreationDate = () => {
+        return [
+            "November 20, 2022 - 04:31",
+            "November 20, 2022 - 05:27",
+            "November 20, 2022 - 09:42"
+        ][Math.floor(Math.random() * 3)]
+    }
 
     const handleClose = () => {
         setModalContent(null)
@@ -58,7 +72,6 @@ export default function Home(props) {
         fetch(`${KEYWORDV1}/${keyword.id}/`)
             .then((res) => res.json())
             .then((data) => {
-                console.log(data)
                 setModalContent({
                     title: keyword.keyword,
                     text: data.detailedDescription.articleBody,
@@ -97,6 +110,14 @@ export default function Home(props) {
         return (<div>{res}</div>)
     }
 
+    const fetchNotes = () => {
+        fetch(GET_NOTES(data.id))
+                    .then((res) => res.json())
+                    .then((data) => {
+                        setNotes(data)
+                    })
+    }
+
     useEffect(() => {
         let timeId = 0
         if (!videoId) return
@@ -122,9 +143,10 @@ export default function Home(props) {
                 data.summaries.forEach(d => {
                     d["keywordsSTR"] = d.keywords.map(k => k.keyword).join("|")
                 })
-                console.log(data)
                 setData(data)
                 setLoading(false)
+
+                fetchNotes()
             })
         return () => {
             clearInterval(timeId)
@@ -162,7 +184,17 @@ export default function Home(props) {
     const submitNote = async (event) => {
         event.preventDefault();
         const noteText = event.target[0].value;
-        // TODO: create a note
+
+        const postData = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({"video": data.id, "text": noteText, "author": getAuthor()})
+        }
+        setLoading(true)
+        fetch(`${CREATE_NOTE}`, postData)
+            .then((res) => {fetchNotes()})
     }
 
     return (
@@ -194,14 +226,14 @@ export default function Home(props) {
                             <Card.Title>Notes</Card.Title>
                         </Card.Body>
                     </Card>
-                    {notes.map((note) => (
+                    {notes && notes.map((note) => (
                         <Card style={cardStyle} bg="light">
                             <Card.Body>
                                 <Card.Title>
-                                    <Image thumbnail src={note.authorAvatar} style={avatarStyle}/>
+                                    <Image thumbnail src={getAvatar()} style={avatarStyle}/>
                                     {note.author}
                                 </Card.Title>
-                                <Card.Subtitle className="mb-2 text-muted">{note.creationDate}</Card.Subtitle>
+                                <Card.Subtitle className="mb-2 text-muted">{getCreationDate()}</Card.Subtitle>
                                 <Card.Text>{note.text}</Card.Text>
                             </Card.Body>
                         </Card>

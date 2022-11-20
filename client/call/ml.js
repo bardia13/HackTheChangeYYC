@@ -1,4 +1,4 @@
-const APIV1 = "http://localhost:8000"
+const APIV1 = "http://34.211.58.93:8000"
 export const SUMMARYV1 = `${APIV1}/core/video/add/`
 function postData(url = '', data = {}) {
    return fetch(url, {
@@ -15,3 +15,6 @@ export function getSummary(videoId) {
 };
 
 export const KEYWORDV1 = `${APIV1}/core/keyword`
+
+export const CREATE_NOTE = `${APIV1}/core/video/notes/add/`
+export const GET_NOTES = (videoId) => `${APIV1}/core/video/${videoId}/notes/`
