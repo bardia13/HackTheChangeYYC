@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from .models import Video, Summary, Keyword
+from .models import Video, Summary, Keyword, Note, NoteComment
 from .transcript import get_transcript
 from .ml import get_text_keywords
 import json
@@ -34,4 +34,19 @@ class VideoSerializer(ModelSerializer):
             return instance
         except Video.DoesNotExist:
             return super().create(validated_data)
+
+
+class NoteCommentSerializer(ModelSerializer):
+    class Meta:
+        model = NoteComment
+        fields = ["id", "author", "text", "note"]
+        read_only_fields = ["id"]
+
+class NoteSerializer(ModelSerializer):
+    comments = NoteCommentSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Note
+        fields = ["id", "author", "text", "upvote", "comments", "video"]
+        read_only_fields = ["id", "comments", "upvote"]
 

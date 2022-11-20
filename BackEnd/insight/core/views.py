@@ -1,9 +1,9 @@
 from django.shortcuts import render
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, ListCreateAPIView, ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import VideoSerializer
-from .models import Keyword
+from .serializers import VideoSerializer, NoteSerializer, NoteCommentSerializer
+from .models import Keyword, Note, NoteComment
 from .ml import get_google_knowledge_results
 from django.http import Http404
 # Create your views here.
@@ -27,3 +27,20 @@ class KeywordAPIView(APIView):
         return Response(result)
         
         
+class NoteAPI(ListAPIView):
+    serializer_class = NoteSerializer
+    def get_queryset(self):
+        vid = self.kwargs["vid"]
+        return Note.objects.filter(video_id = vid)
+
+class NoteCreateAPI(CreateAPIView):
+    serializer_class = NoteSerializer
+
+class NoteCommentAPI(ListAPIView):
+    serializer_class = NoteCommentSerializer
+    def get_queryset(self):
+        nid = self.kwargs["nid"]
+        return NoteComment.objects.filter(note_id=nid)
+
+class NoteCommentCreateAPI(CreateAPIView):
+    serializer_class = NoteCommentSerializer
